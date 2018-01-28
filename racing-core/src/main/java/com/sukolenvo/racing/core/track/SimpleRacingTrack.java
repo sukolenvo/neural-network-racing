@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Simple track implementation with static 8 points. Approximate view:
@@ -86,5 +87,19 @@ public class SimpleRacingTrack implements RacingTrack {
                 .findFirst()
                 .orElseThrow(() -> new WallNotFoundException("Wall not found for (" + xFrom + ";" + yFrom + ")" +
                         " with angle: " + direction));
+    }
+
+    @Override
+    public Point getInitialPosition() {
+        return new Point(100, -125);
+    }
+
+    /**
+     * The more we right and down - better.
+     * y is negative (0.0 is top left corner)
+     */
+    @Override
+    public double fitnessFunction(Point position) {
+        return position.getX() * 50 - position.getY();
     }
 }

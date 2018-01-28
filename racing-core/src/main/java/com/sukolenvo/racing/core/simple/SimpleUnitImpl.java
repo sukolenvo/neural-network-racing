@@ -1,10 +1,17 @@
-package com.sukolenvo.racing.core;
+package com.sukolenvo.racing.core.simple;
+
+import com.sukolenvo.racing.core.Unit;
+import com.sukolenvo.racing.core.track.Point;
 
 import java.util.Random;
 
 public class SimpleUnitImpl extends Unit {
 
     private static Random random = new Random();
+
+    public SimpleUnitImpl(Point start) {
+        this(start.getX(), start.getY());
+    }
 
     public SimpleUnitImpl(double startX, double startY) {
         setX(startX);

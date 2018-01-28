@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public abstract class Unit {
 
-    protected static final int MAX_ANGLE_DELTA = 4;
+    public static final int MAX_ANGLE_DELTA = 15;
 
     /**
      * From top left corner.
@@ -31,8 +31,6 @@ public abstract class Unit {
     public Point getPosition() {
         return new Point(x, y);
     }
-
-    public abstract void updateDirection();
 
     public void moveTo(Point to) {
         this.x = to.getX();

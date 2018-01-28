@@ -20,4 +20,8 @@ public interface RacingTrack {
     default Point getWall(Unit unit) {
         return getWall(unit.getX(), unit.getY(), unit.getAngle());
     }
+
+    Point getInitialPosition();
+
+    double fitnessFunction(Point position);
 }
