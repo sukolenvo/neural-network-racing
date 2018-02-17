@@ -18,12 +18,17 @@ public class SimpleUnitController extends AbstractUnitController<SimpleUnitImpl>
     }
 
     @Override
+    public void reset() {
+        resetUnitsToStart(getUnits());
+    }
+
+    @Override
     protected SimpleUnitImpl createUnit() {
         return new SimpleUnitImpl(getRacingTrack().getInitialPosition());
     }
 
     @Override
-    protected void makeStep() {
+    public void makeStep() {
         getUnits().stream().filter(unit -> !unit.isDisabled())
                 .forEach(unit -> {
                     Point border = getRacingTrack().getWall(unit);

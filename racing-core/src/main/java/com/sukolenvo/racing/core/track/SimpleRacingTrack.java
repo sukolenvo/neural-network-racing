@@ -1,5 +1,6 @@
 package com.sukolenvo.racing.core.track;
 
+import com.sukolenvo.racing.core.Unit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.BasicStroke;
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Simple track implementation with static 8 points. Approximate view:
@@ -101,5 +101,10 @@ public class SimpleRacingTrack implements RacingTrack {
     @Override
     public double fitnessFunction(Point position) {
         return position.getX() * 50 - position.getY();
+    }
+
+    @Override
+    public boolean isTrackCompleted(Unit unit) {
+        return unit.getY() <= -899.9;
     }
 }

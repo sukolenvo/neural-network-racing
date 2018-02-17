@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +29,7 @@ public class LearningUnitController extends AbstractUnitController<LearningUnit>
     }
 
     @Override
-    protected void makeStep() {
+    public void makeStep() {
         getUnits().stream().filter(unit -> !unit.isDisabled())
                 .forEach(unit -> {
                     Point border = getRacingTrack().getWall(unit);
@@ -54,24 +53,28 @@ public class LearningUnitController extends AbstractUnitController<LearningUnit>
     }
 
     @Override
-    protected void emulationFinished() {
-        super.emulationFinished();
-        List<LearningUnit> units = getUnits().stream()
-                .sorted(Collections.reverseOrder(
-                        Comparator.comparingDouble(unit -> getRacingTrack().fitnessFunction(unit.getPosition()))))
-                .collect(Collectors.toList());
-        recombine(units);
-        mutate(units);
-        resetUnitsToStart(units);
+    public void reset() {
+        if (isFinished()) {
+            List<LearningUnit> units = getUnits().stream()
+                    .sorted(Collections.reverseOrder(
+                            Comparator.comparingDouble(unit -> getRacingTrack().fitnessFunction(unit.getPosition()))))
+                    .collect(Collectors.toList());
+            recombine(units);
+            mutate(units);
+        }
+        resetUnitsToStart(getUnits());
     }
 
-    private void recombine(List<LearningUnit> units) {
-        LearningUnit first = copy(units.get(0));
-        LearningUnit second = copy(units.get(1));
-        for (int i = 2; i < units.size(); i += 2) {
+    /**
+     * @param orderedUnits should be ordered by fitnessFunction DESC
+     */
+    private void recombine(List<LearningUnit> orderedUnits) {
+        LearningUnit first = copy(orderedUnits.get(0));
+        LearningUnit second = copy(orderedUnits.get(1));
+        for (int i = 2; i < orderedUnits.size(); i += 2) {
             recombineUnits(first, second);
-            units.get(i).setUnitWeights(first.copyWeights());
-            units.get(i + 1).setUnitWeights(second.copyWeights());
+            orderedUnits.get(i).setUnitWeights(first.copyWeights());
+            orderedUnits.get(i + 1).setUnitWeights(second.copyWeights());
         }
     }
 
@@ -108,24 +111,6 @@ public class LearningUnitController extends AbstractUnitController<LearningUnit>
                     unit.getUnitWeights().get(i).set(j, WeightHelper.getRandowmWeight());
                 }
             }
-        }
-    }
-
-    private void resetUnitsToStart(List<LearningUnit> units) {
-        units.forEach(unit -> {
-            Point initialPosition = getRacingTrack().getInitialPosition();
-            unit.setX(initialPosition.getX());
-            unit.setY(initialPosition.getY());
-            unit.setDisabled(false);
-            unit.setAngle(0);
-        });
-    }
-
-    @Override
-    public void start(Runnable interStepCallback, Consumer<Integer> generationListener) {
-        for(int i = 0;; i++) {
-            super.start(interStepCallback, generationListener);
-            generationListener.accept(i + 1);
         }
     }
 }

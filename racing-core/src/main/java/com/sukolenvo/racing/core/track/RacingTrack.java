@@ -24,4 +24,6 @@ public interface RacingTrack {
     Point getInitialPosition();
 
     double fitnessFunction(Point position);
+
+    boolean isTrackCompleted(Unit unit);
 }
