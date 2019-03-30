@@ -1,0 +1,11 @@
+stages:
+  - build
+
+package:
+  stage: build
+  image: maven:3.6.0-jdk-8
+  script: mvn package
+  tags:
+    - docker
+  only:
+    - master
